@@ -41,6 +41,8 @@ DCDCPARASTRUCT  		 	DCDCReg 			= DCDCPIDPARADEFAULTS;
 DCDCPARASTRUCT  		 	DCDCRegRst 			= DCDCPIDPARADEFAULTS;
 BUCKPARASTRUCT   		 	BuckReg 			= BUCKPIDPARADEFAULTS;
 BUCKPARASTRUCT  		 	BuckRegRst 			= BUCKPIDPARADEFAULTS;
+sogi_hq_struct             sogi_hq_reg         = sogi_hq_para_default;
+sogi_hq_struct             sogi_hq_reg_rst     = sogi_hq_para_default;
 
 /***********************************************************
 *函数介绍：
@@ -745,6 +747,11 @@ void SPLL(SPLLPARASTRUCT *p)
             Uuvw_fil = 3*Uvw_bias - (Uvn_fil+Uwn_fil);
 		    p->Ualpha = 0.666666666*Uuvw_fil - 0.333333333*Uvn_fil - 0.333333333*Uwn_fil;
 			p->Ubeta = 0.577350269189*Uvn_fil - 0.577350269*Uwn_fil;
+
+            p->Ubeta = 0.577350269189*Uvn_fil - 0.577350269*Uwn_fil;
+            sogi_hq_reg.U_K = p->Ubeta;
+            sogi_hq(&sogi_hq_reg);
+            p->Ualpha = 0 - sogi_hq_reg.Y_K;
 		}
 		else{;}
 
@@ -1357,3 +1364,18 @@ void SivCutoff(void)
 	DATA_EXTRACT_UNSIGNED32(temp, A_ARMRDDSP_DEBUG6_gui, UNSIGNED16_LOW_BYTE);
 	HWREGH(DSP_To_ARM_12D6) = temp;
 }
+/***********************************************************
+*函数介绍：
+*输入参数：无
+*输出参数：无
+*返 回 值：无
+***********************************************************/
+void sogi_hq(sogi_hq_struct *p)
+{
+    p->Y_K = p->cofA* p->U_K +  p->cofB *  p->U_K_1 + p->cofC * p->U_K_2 - p->cofD *p->Y_K_1 - p->cofE * p->Y_K_2;
+    p->Y_K_2 = p->Y_K_1;
+    p->Y_K_1 = p->Y_K;
+    p->U_K_2 = p->U_K_1;
+    p->U_K_1 = p->U_K;
+}
+

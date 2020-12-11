@@ -300,6 +300,7 @@ void  ParaVarZero(void)
 		UDSevenPID = UDSevenPIDRst;
 		UQSevenPID = UQSevenPIDRst;
 		PQData 		= PQDataRst;
+        sogi_hq_reg = sogi_hq_reg_rst;
 	}
 	else{;}
 

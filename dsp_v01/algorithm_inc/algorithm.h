@@ -154,6 +154,17 @@ typedef         long unsigned int              	Mytype_uint64;
 									 0,\
 									 0}
 
+#define sogi_hq_para_default    {   0.0009339,\
+                                    0.001868,\
+                                    0.0009339,\
+                                    -1.926,\
+                                    0.9287,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0}
 
 #define SVPWMREGDEFAULTS {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\
 						  0,0,0,0,0,0,0,0,0,0,0,0}
@@ -433,6 +444,19 @@ Mytype_float64 Integral;
 Mytype_float64 Derivative;
 							
 							}UDPIDPARASTRUCT,*UDPIDPARAHANDLE;
+							typedef struct sogi_hq_para{
+							                            Mytype_float64 cofA;
+							                            Mytype_float64 cofB;
+							                            Mytype_float64 cofC;
+							                            Mytype_float64 cofD;
+							                            Mytype_float64 cofE;
+							                            Mytype_float64 Y_K;
+							                            Mytype_float64 Y_K_1;
+							                            Mytype_float64 Y_K_2;
+							                            Mytype_float64 U_K;
+							                            Mytype_float64 U_K_1;
+							                            Mytype_float64 U_K_2;
+							                        }sogi_hq_struct,*sogi_hq_handle;
 /*Variable declaration*/
 extern  	SPLLPARASTRUCT  	  	SPLLReg;
 extern  	SPLLPARASTRUCT  	  	SPLLRegRst;
@@ -456,8 +480,8 @@ extern	 	DCDCPARASTRUCT	  		DCDCReg;
 extern		DCDCPARASTRUCT 	  		DCDCRegRst;
 extern	 	BUCKPARASTRUCT 	  		BuckReg;
 extern 	 	BUCKPARASTRUCT 	  		BuckRegRst;
-
-
+extern      sogi_hq_struct          sogi_hq_reg;
+extern      sogi_hq_struct          sogi_hq_reg_rst;
 /*Function declaration*/
 extern void SPLL(SPLLPARAHANDLE);
 extern void UDFiveCtrl(UDFivePIDPARAHANDLE);
@@ -476,6 +500,7 @@ extern void UDCtrl(UDPIDPARAHANDLE);
 extern void BuckCtrl(BUCKHANDLE);
 extern void DCDCCtrl(DCDCHANDLE);
 extern void SivCutoff(void);
+extern void sogi_hq(sogi_hq_handle);
 /*-----------------------------------------------------------------------*/
 
 #endif
