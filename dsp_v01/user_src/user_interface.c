@@ -18,6 +18,7 @@ Copyright (c),2002-2017,Sifang Rolling Stock Research Institute Ltd.
 #include "algorithm.h"
 #include "user_sysglobalvar.h"
 #include <string.h>
+#include <stdio.h>
 /***********************************************************
 *函数介绍：OVT斩波函数
 *输入参数：无
