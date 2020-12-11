@@ -40,4 +40,5 @@ extern void  DAM_Tran(void);
 extern void  DSP_TO_ARM(void);
 extern void  OvtCtrl(void);
 extern void  DSP_WR_FPGAPWMReg(void);
+extern double slide_filter(double *x);
 #endif

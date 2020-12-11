@@ -172,7 +172,7 @@ typedef         long unsigned int              	Mytype_uint64;
 #define PQCALCDEFAULTS {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 
 #define SPLLPARADEAULATS {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\
-                         	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+                         	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 #define     TsComp              5e-3
 #define 	FilterPara 			0.01//0.008
 #define 	PI1            		3.1415926535
@@ -271,6 +271,7 @@ typedef struct SPLLPARA{
                             Mytype_float64 cosswt;
 						    Mytype_float64 sinewt;
                             Mytype_float64 cosewt;
+                            Mytype_float64 uq_out_filter;
                         }SPLLPARASTRUCT,*SPLLPARAHANDLE;
 typedef struct SVPWMPARA{
                             Mytype_float64 RoVector;

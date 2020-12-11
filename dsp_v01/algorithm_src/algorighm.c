@@ -776,6 +776,14 @@ void SPLL(SPLLPARASTRUCT *p)
        	UQCtrl(&UQPID);
 
       	Uqout = 0.9999*(Uqout - UQPID.OutputPoint) + UQPID.OutputPoint;
+        slide_cnt++;
+        if((slide_cnt%6)==0)
+        {
+            slide_cnt = 0;
+            p->uq_out_filter = slide_filter(&Uqout);
+        }
+        else{;}
+
        	p->Angle += CarryFreq*(SIV_F - UQPID.OutputPoint);
 
        	if(p->Angle >= DOUBLE_PI)

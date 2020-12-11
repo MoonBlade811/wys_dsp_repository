@@ -130,6 +130,11 @@ extern unsigned int EventEnable;
 extern double buck_duty;
 extern unsigned int ovt_cnt;
 extern unsigned int ovt_over_flag;
+extern double FreqSum;
+extern double xBuf[20];
+extern unsigned int FreqCnt;
+extern unsigned int slide_cnt;
+
 extern double Debug0;/*记录算法执行时间*/
 extern double Debug1;/*记录算法执行时间*/
 extern double Debug2;/*记录算法执行时间*/

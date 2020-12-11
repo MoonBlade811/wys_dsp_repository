@@ -130,6 +130,11 @@ unsigned int EventEnable = 0;
 unsigned int ovt_cnt = 0;
 unsigned int ovt_over_flag = 0;
 
+double FreqSum = 0;
+double xBuf[20]={0};
+unsigned int FreqCnt = 0;
+unsigned int slide_cnt = 0;
+
 double buck_duty = 0;
 double Debug0 = 0;
 double Debug1 = 0;

@@ -17,6 +17,7 @@ Copyright (c),2002-2017,Sifang Rolling Stock Research Institute Ltd.
 #include "delay.h"
 #include "algorithm.h"
 #include "user_sysglobalvar.h"
+#include <string.h>
 /***********************************************************
 *函数介绍：OVT斩波函数
 *输入参数：无
@@ -301,8 +302,13 @@ void  ParaVarZero(void)
 		UQSevenPID = UQSevenPIDRst;
 		PQData 		= PQDataRst;
         sogi_hq_reg = sogi_hq_reg_rst;
+
 	}
 	else{;}
+
+    slide_cnt = 0;
+    FreqCnt = 0;
+    memset(xBuf, 0,  20);
 
 	SUMP =0;
 	SUMQ =0;
@@ -740,7 +746,7 @@ void DAM_Tran()
     A_DSPWRFPGA_DAMREG29=(unsigned int)((SIV_F)*1191.545454);
     A_DSPWRFPGA_DAMREG30=(unsigned int)((Uqout+1)*32767.5);
     A_DSPWRFPGA_DAMREG31=(unsigned int)((SysStart)*32767.5);
-    A_DSPWRFPGA_DAMREG32=(unsigned int)(DCDCReg.OutputPoint*81.91875);
+    A_DSPWRFPGA_DAMREG32=(unsigned int)((SPLLReg.uq_out_filter+1)*32767.5);
 
     temp = 0;
     DATA_EXTRACT_UNSIGNED32(temp, A_DSPWRFPGA_DAMREG1, 0);
@@ -895,4 +901,27 @@ void DSP_WR_FPGAPWMReg(void)
 	DATA_INSERT_BOOLEAN(temp,  L_DCDCPWM_CHECKIGBTENA_gui,    13);
 	DATA_INSERT_BOOLEAN(temp,  L_BuckPWM_CHECKIGBTENA_gui,    14);
 	HWREGH(DSP_To_FPGA_0000) = temp;
+}
+/***********************************************************
+*函数介绍：
+*输入参数：
+*输出参数：
+*返 回 值：
+***********************************************************/
+double slide_filter(double *x)
+{
+    unsigned int loop_cnt = 0;
+    double  FreqSum = 0;
+    xBuf[FreqCnt++] = *x;
+    if(FreqCnt == 20)
+    {
+        FreqCnt = 0;
+    }
+    else{;}
+
+    for(loop_cnt=0;loop_cnt<20;loop_cnt++)
+    {
+        FreqSum += xBuf[loop_cnt];
+    }
+    return (FreqSum/20.0);
 }
