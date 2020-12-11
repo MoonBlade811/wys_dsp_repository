@@ -17,8 +17,8 @@ Copyright (c),2002-2017,Sifang Rolling Stock Research Institute Ltd.
 #include "user_syscfg.h"
 #include "user_sysglobalvar.h"
 #include "user_interface.h"
-
-
+#include "user_interface.h"
+#include <string.h>
 SPLLPARASTRUCT  		 	SPLLReg     		= SPLLPARADEAULATS;
 SPLLPARASTRUCT  		 	SPLLRegRst 			= SPLLPARADEAULATS;
 SVPWMPARASTRUCT 		 	SVPWMReg    		= SVPWMREGDEFAULTS;
@@ -41,8 +41,8 @@ DCDCPARASTRUCT  		 	DCDCReg 			= DCDCPIDPARADEFAULTS;
 DCDCPARASTRUCT  		 	DCDCRegRst 			= DCDCPIDPARADEFAULTS;
 BUCKPARASTRUCT   		 	BuckReg 			= BUCKPIDPARADEFAULTS;
 BUCKPARASTRUCT  		 	BuckRegRst 			= BUCKPIDPARADEFAULTS;
-sogi_hq_struct             sogi_hq_reg         = sogi_hq_para_default;
-sogi_hq_struct             sogi_hq_reg_rst     = sogi_hq_para_default;
+sogi_hq_struct              sogi_hq_reg         = sogi_hq_para_default;
+sogi_hq_struct              sogi_hq_reg_rst     = sogi_hq_para_default;
 
 /***********************************************************
 *函数介绍：
@@ -345,11 +345,11 @@ void BuckPWMCtrl()
 void AngleModul(void)
 {
 	unsigned short temp = 0;
-	if((AngleModuStart==0)&&(DQStart)&&(L_BL_master_judgment_gui==0)&&(UDPID.MeasurePoint>=295)\
-			&&(UDPID.OutputPoint>=300)&&(UQPID.OutputPoint>=-10)&&(UQPID.OutputPoint<=10))
+	if((AngleModuStart==0)&&(DQStart)&&(L_BL_master_judgment_gui==0)&&(UDPID.MeasurePoint>=270)\
+			&&(UDPID.OutputPoint>=270)&&(UQPID.OutputPoint>=-10)&&(UQPID.OutputPoint<=10))
 	{
 		AngleModudelay++;
-		if(AngleModudelay >= 30000)/*延时5s，方便从机获取主机频率信息*/
+		if(AngleModudelay >= 6000)/*延时5s，方便从机获取主机频率信息*/
 		{
 			AngleModuStart = 1;
 			AngleModudelay = 0;
@@ -417,7 +417,6 @@ void AngleModul(void)
 
 		  		KM3ClsCmd = 1;
 
-
 		  		temp =(unsigned short)(A_ARMRDDSP_DEBUG10_gui&0xffff);
 		  		DATA_INSERT_BOOLEAN(temp,  L_DSPWRFPGA_DOUTLOCALSTA3_gui,     3);
 		  		DATA_INSERT_BOOLEAN(temp,  L_DSPWRFPGA_DOUTLOCALSTA8_gui,     8);
@@ -470,7 +469,7 @@ void SIVCtrl(double *Alpha, double *Beta)
     {
     	if(SoftStart==0)
     	{
-    		SIV_F = 50.5 - Uqout;/*接触器未吸合，从机以主机频率运行*/
+    		SIV_F = 50.5 - SPLLReg.uq_out_filter;/*接触器未吸合，从机以主机频率运行*/
 //			SIV_F = 120000000/(A_DSPRDFPGA_INVVOUTFREQ_gui + A_DSPRDFPGA_INVWOUTFREQ_gui);/*接触器未吸合，从机以主机频率运行*/
 
 			if(SIV_F >= 50.5)
@@ -739,14 +738,14 @@ void SPLL(SPLLPARASTRUCT *p)
 		}
 		else if((ACU_DIN_gui&0x00000100)==0)
 		{
-		    square_rms = Uwn_Rms_fil*Uwn_Rms_fil - 48360.5;
-		    Uvw_bias = square_rms>=0?sqrt(square_rms):0;
-		    Uvw_fltr = 0.01*Uuvw_fil + 0.99*Uuvw_fil;
-		    Uvw_bias = Uvw_fltr>0?(Uvw_bias):(0-Uvw_bias);
-
-            Uuvw_fil = 3*Uvw_bias - (Uvn_fil+Uwn_fil);
-		    p->Ualpha = 0.666666666*Uuvw_fil - 0.333333333*Uvn_fil - 0.333333333*Uwn_fil;
-			p->Ubeta = 0.577350269189*Uvn_fil - 0.577350269*Uwn_fil;
+//		    square_rms = Uwn_Rms_fil*Uwn_Rms_fil - 48360.5;
+//		    Uvw_bias = square_rms>=0?sqrt(square_rms):0;
+//		    Uvw_fltr = 0.01*Uuvw_fil + 0.99*Uuvw_fil;
+//		    Uvw_bias = Uvw_fltr>0?(Uvw_bias):(0-Uvw_bias);
+//
+//            Uuvw_fil = 3*Uvw_bias - (Uvn_fil+Uwn_fil);
+//		    p->Ualpha = 0.666666666*Uuvw_fil - 0.333333333*Uvn_fil - 0.333333333*Uwn_fil;
+//			p->Ubeta = 0.577350269189*Uvn_fil - 0.577350269*Uwn_fil;
 
             p->Ubeta = 0.577350269189*Uvn_fil - 0.577350269*Uwn_fil;
             sogi_hq_reg.U_K = p->Ubeta;
@@ -775,7 +774,7 @@ void SPLL(SPLLPARASTRUCT *p)
        	UQPID.MeasurePoint = p->UqpDpl;
        	UQCtrl(&UQPID);
 
-      	Uqout = 0.9999*(Uqout - UQPID.OutputPoint) + UQPID.OutputPoint;
+      	Uqout = 0.999*(Uqout - UQPID.OutputPoint) + UQPID.OutputPoint;
         slide_cnt++;
         if((slide_cnt%6)==0)
         {
@@ -784,7 +783,7 @@ void SPLL(SPLLPARASTRUCT *p)
         }
         else{;}
 
-       	p->Angle += CarryFreq*(SIV_F - UQPID.OutputPoint);
+       	p->Angle += CarryFreq*(50.5 - UQPID.OutputPoint);
 
        	if(p->Angle >= DOUBLE_PI)
         {
@@ -827,7 +826,21 @@ void SPLL(SPLLPARASTRUCT *p)
 	}
 	else
 	{
-		ParaVarZero();
+		//ParaVarZero();
+        SPLLReg = SPLLRegRst;
+
+        UDPID = UDPIDRst;
+        UQPID = UQPIDRst;
+//        UDFivePID = UDFivePIDRst;
+//        UQFivePID = UQFivePIDRst;
+//        UDSevenPID = UDSevenPIDRst;
+//        UQSevenPID = UQSevenPIDRst;
+//        PQData      = PQDataRst;
+        sogi_hq_reg = sogi_hq_reg_rst;
+
+        slide_cnt = 0;
+        FreqCnt = 0;
+        memset(xBuf, 0,  20);
 	}
 
 	if((p->Angle>=0)&&(p->Angle <= SysStartAngel)&&(L_BL_master_judgment_gui==0)\
@@ -1300,7 +1313,7 @@ void SivCutoff(void)
 
 	if(((A_DSPRDFPGA_FPGACHECKFAULT_gui&0x3FBF)!=0)||(L_SIVCTT_open_Req_Acc_gui)\
 	 ||((ACU_DIN_gui&0x20)==0x20)||((NetVoltage_fil <= 480)&&(L_AUX_TESTMODE_gui==0))||((A_ARMRDDSP_DEBUG41_gui&0x01)==0x01)\
-	 ||(L_Inverter_start_gui==0))
+	 ||(L_Inverter_start_gui==0)||(L_System_Ready_gui==0))
 	{
 		L_Inverter_start_gui = 0;/*by Jason@2017年11月9日17:59:20*/
 

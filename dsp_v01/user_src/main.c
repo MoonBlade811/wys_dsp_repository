@@ -120,7 +120,7 @@ void main(void)
    	   	  			{
    	   	  				DQStart = 1;
    	   	  			}
-   	   	  			else if((L_BL_master_judgment_gui==0)&&(Uvn_fil >= 280))
+   	   	  			else if((L_BL_master_judgment_gui==0)&&(Uwn_Rms_meas >= 170))
    	   	  			{
    	   	  				DQStart = 1;
    	   	  			}

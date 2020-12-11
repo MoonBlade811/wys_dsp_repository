@@ -18,7 +18,6 @@ Copyright (c),2002-2017,Sifang Rolling Stock Research Institute Ltd.
 #include "algorithm.h"
 #include "user_sysglobalvar.h"
 #include <string.h>
-#include <stdio.h>
 /***********************************************************
 *函数介绍：OVT斩波函数
 *输入参数：无
@@ -293,34 +292,33 @@ void  ParaVarZero(void)
 {
 	if((DQStart==0)||((L_SIV_start_Comm_gui==0)&&(L_INV_PWMENA_gui==0)))
 	{
-		SPLLReg = SPLLRegRst;
-		SVPWMReg = SVPWMRegRst;
-		UDPID = UDPIDRst;
-		UQPID = UQPIDRst;
-		UDFivePID = UDFivePIDRst;
-		UQFivePID = UQFivePIDRst;
-		UDSevenPID = UDSevenPIDRst;
-		UQSevenPID = UQSevenPIDRst;
-		PQData 		= PQDataRst;
-        sogi_hq_reg = sogi_hq_reg_rst;
+//		SPLLReg = SPLLRegRst;
+//		SVPWMReg = SVPWMRegRst;
+//		UDPID = UDPIDRst;
+//		UQPID = UQPIDRst;
+//		UDFivePID = UDFivePIDRst;
+//		UQFivePID = UQFivePIDRst;
+//		UDSevenPID = UDSevenPIDRst;
+//		UQSevenPID = UQSevenPIDRst;
+//		PQData 		= PQDataRst;
+//        sogi_hq_reg = sogi_hq_reg_rst;
 
 	}
 	else{;}
 
-    slide_cnt = 0;
-    FreqCnt = 0;
-    memset(xBuf, 0,  20);
-
+    SVPWMReg = SVPWMRegRst;
+    PQData   = PQDataRst;
 	SUMP =0;
 	SUMQ =0;
 	SUMPBack =0;
 	SUMQBack =0;
 
+
 	SoftStop =0;
 	SoftStart =0;
 
 	Udout = 0;
-	Uqout = 0;
+//	Uqout = 0;
 
 	KM3ClsCmd = 0;
 	SIV_V = 311;
@@ -333,7 +331,6 @@ void  ParaVarZero(void)
 	AngleErr = 0;
 	A_ARMRDDSP_DEBUG1_gui = 0;/*从机闭合命令复位*/
 	AngleModudelay = 0;
-	KM3ClsCmd =0;
 
 	ACU_DIN_gui_last = ACU_DIN_gui;/*接触器状态复位*/
 }
@@ -718,7 +715,7 @@ void DAM_Tran()
 
     A_DSPWRFPGA_DAMREG1=(unsigned int)(NetVoltage_meas*65.535);
     A_DSPWRFPGA_DAMREG2=(unsigned int)(FCVoltage_meas*65.535);
-    A_DSPWRFPGA_DAMREG3=(unsigned int)((BuckOutVol_meas)*665.535);
+    A_DSPWRFPGA_DAMREG3=(unsigned int)((BuckOutVol_meas)*65.535);
     A_DSPWRFPGA_DAMREG4=(unsigned int)((DCDCOutVol_meas)*65.535);
     A_DSPWRFPGA_DAMREG5=(unsigned int)((Uun_meas+400)*81.91875);
     A_DSPWRFPGA_DAMREG6=(unsigned int)((Uvn_meas+400)*81.91875);
@@ -745,7 +742,7 @@ void DAM_Tran()
     A_DSPWRFPGA_DAMREG27=(unsigned int)((SoftStart)*32767.5);
     A_DSPWRFPGA_DAMREG28=(unsigned int)((SIV_V)*163.8375);
     A_DSPWRFPGA_DAMREG29=(unsigned int)((SIV_F)*1191.545454);
-    A_DSPWRFPGA_DAMREG30=(unsigned int)((Uqout+1)*32767.5);
+    A_DSPWRFPGA_DAMREG30=(unsigned int)((DQStart)*32767.5);
     A_DSPWRFPGA_DAMREG31=(unsigned int)((SysStart)*32767.5);
     A_DSPWRFPGA_DAMREG32=(unsigned int)((SPLLReg.uq_out_filter+1)*32767.5);
 
