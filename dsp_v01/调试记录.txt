@@ -1,0 +1,102 @@
+2020年9月11日16:11:21
+#if 0
+	//FIXME 2020年7月28日
+	/*over voltage handle*/
+	if((DCDCReg.SetPoint==600)&&(DCDCReg.MeasurePoint>=640)&&(dcdc_overvol_flag==0)){
+	    L_DCDCPWM_CMP1ENA_gui =0;           //DCDC超前臂比较使能关闭
+	    L_DCDCPWM_CMP2ENA_gui =0;           //DCDC滞后臂比较使能关闭
+	    DSP_WR_FPGAPWMReg();
+	    dcdc_overvol_flag = 1;
+	}
+	else{;}
+
+	if((DCDCReg.SetPoint==600)&&(DCDCReg.MeasurePoint<=620)&&(dcdc_overvol_flag==1)){
+        L_DCDCPWM_CMP1ENA_gui =1;           //DCDC超前臂比较使能开启
+        L_DCDCPWM_CMP2ENA_gui =1;           //DCDC滞后臂比较使能开启
+        DSP_WR_FPGAPWMReg();
+        dcdc_overvol_flag = 0;
+	}
+	/*over voltage handle*/
+#endif
+
+#define DCDCPIDPARADEFAULTS {       6,\
+                                    1,\
+                                    0.1,\
+                                    1,\
+                                    0,\
+                                    1,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    700,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0}
+修改
+#define DCDCPIDPARADEFAULTS {       6,\
+                                    1,\
+                                    0.2,\
+                                    1,\
+                                    2,\
+                                    1,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    700,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0}
+2020年9月11日19:44:58
+3.#define BUCKPIDPARADEFAULTS {       0.05,\
+                                    1,\
+                                    0.0003,\
+                                    1,\
+                                    6,\
+                                    1,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    600,\
+                                    0,\
+                                    0,\
+                                    0,\
+                                    0}
+修改为
+#define BUCKPIDPARADEFAULTS {		0.5,\
+									1,\
+									0.01,\
+									1,\
+									6,\
+									1,\
+									0,\
+									0,\
+									0,\
+									0,\
+									0,\
+									0,\
+									600,\
+									0,\
+									0,\
+									0,\
+									0}
+4.将BUCK控制函数改到定时器中断
+5.DCDC目标值改到620V
+6.斩波动作电压670V，复位电压650V;
+7.	if((p->Angle>=0)&&(p->Angle <= SysStartAngel)&&(L_BL_master_judgment_gui==0)\
+	&&(L_SIV_start_Comm_gui)&&(InvStartFlag)&&(L_Inverter_start_gui)&&(SPLLReg.UdpFilter>=295)&&(SysStart==0))/*从机启动时刻，减少锁相时间*/
+	{
+		SysStart = 1;
+		SVPWMReg.RoAngle = SPLLReg.SpllAngle;
+	}
+	else{;}
