@@ -108,29 +108,7 @@ void main(void)
 
       		case 1:
    	   	  	{
-				/******************锁相延时，防止启机模拟量采集不稳***************/
 
-   	   	  		if(DQcnt < 150)
-   	   	  		{
-   	   	  			DQcnt++;
-   	   	  		}
-   	   	  		else
-   	   	  		{
-   	   	  			if(L_BL_master_judgment_gui)
-   	   	  			{
-   	   	  				DQStart = 1;
-   	   	  			}
-   	   	  			else if((L_BL_master_judgment_gui==0)&&(Uwn_Rms_meas >= 170))
-   	   	  			{
-   	   	  				DQStart = 1;
-   	   	  			}
-   	   	  			else{;}
-   	   	  		}
-   	   	  		if(L_System_Ready_gui==0)
-   	   	  		{
-   	   	  			DQStart = 0;
-   	   	  		}
-   	   	  		else{;}
 				/****************************功能主函数***************************/
 	        	DSP_Get_DRAM_ARMData();
 	        	DSP_Get_DRAM_FPGAData();

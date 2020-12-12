@@ -239,6 +239,7 @@ static void GPIOHighpriorityIsr(void)
 		StopDCDCMdl();
 		InitDCDCMdl();
 	}
+
 	SPLL(&SPLLReg);
 	if((L_SIV_start_Comm_gui==1)&&(InvStartFlag))
 	{

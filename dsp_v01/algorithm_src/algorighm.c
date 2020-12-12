@@ -729,6 +729,29 @@ void SIVCtrl(double *Alpha, double *Beta)
 ***********************************************************/
 void SPLL(SPLLPARASTRUCT *p)
 {
+    /******************锁相延时，防止启机模拟量采集不稳***************/
+    if(DQcnt < 18000)
+    {
+        DQcnt++;
+    }
+    else
+    {
+        if((L_BL_master_judgment_gui)&&(L_SIV_start_Comm_gui))
+        {
+            DQStart = 1;
+        }
+        else if((L_BL_master_judgment_gui==0)&&(Uwn_Rms_meas >= 170))
+        {
+            DQStart = 1;
+        }
+        else{;}
+    }
+    if(L_System_Ready_gui==0)
+    {
+        DQStart = 0;
+    }
+    else{;}
+
 	if(DQStart == 1)
 	{
 		if((ACU_DIN_gui&0x00000100)==0x00000100)
